@@ -1,3 +1,4 @@
+import 'package:app/app/di.dart';
 import 'package:app/presentation/forgot_password/forgot_password_view.dart';
 import 'package:app/presentation/login/view/login_view.dart';
 import 'package:app/presentation/onbording/view/onbording_view.dart';
@@ -30,6 +31,7 @@ class RouteGenerator
       case Routes.splashRoute:
         return MaterialPageRoute(builder: (_) => SplashView());
       case Routes.loginRoute:
+        initLoginModule();
         return MaterialPageRoute(builder: (_) => LoginView());
       case Routes.registerRoute:
         return MaterialPageRoute(builder: (_) => RegisterView());

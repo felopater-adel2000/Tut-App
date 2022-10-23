@@ -15,7 +15,10 @@ class StringsManager
   static const String password = "Password";
   static const String login = "Login";
   static const String forgetPassword = "Forget Password";
-  static const String register = "not a member ? Sign Up";
+  static const String registerText = "not a member ? Sign Up";
+  static const String usernameError = "Please Enter You Username";
+  static const String passwordError = "Please Enter You Password";
+
 
 
 }

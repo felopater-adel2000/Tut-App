@@ -12,15 +12,19 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
   final StreamController _userNameStreamController = StreamController<String>.broadcast();
   final StreamController _passwordStreamController = StreamController<String>.broadcast();
 
+  final StreamController _areAllInputValidStreamController = StreamController<void>.broadcast();
+
   var loginObject = LoginObject("userName", "password");
 
   final LoginUseCase _loginUseCase;
 
   LoginViewModel(this._loginUseCase);
+  // LoginViewModel();
   @override
   void dispose() {
     _userNameStreamController.close();
     _passwordStreamController.close();
+    _areAllInputValidStreamController.close();
   }
 
   @override
@@ -32,6 +36,9 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
   Stream<bool> get outIsPasswordValid => _passwordStreamController.stream.map((password) => _isPasswordValid(password));
 
   @override
+  Stream<bool> get outAreAllInputValid => _areAllInputValidStreamController.stream.map((event) => _areInputValid());
+
+  @override
   Stream<bool> get outIsUserNameValid => _userNameStreamController.stream.map((userName) => _isUserNameValid(userName));
 
   @override
@@ -39,6 +46,9 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
 
   @override
   Sink get inputUserName => _userNameStreamController.sink;
+
+  @override
+  Sink get inputAreAllAllValidate => _areAllInputValidStreamController.sink;
 
   bool _isPasswordValid(String password)
   {
@@ -48,6 +58,10 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
   bool _isUserNameValid(String userName)
   {
     return userName.isNotEmpty;
+  }
+  bool _areInputValid()
+  {
+    return _isPasswordValid(loginObject.password) && _isUserNameValid(loginObject.userName);
   }
 
   @override
@@ -66,6 +80,7 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
   {
     inputPassword.add(password);
     loginObject = loginObject.copyWith(password: password);
+    inputAreAllAllValidate.add(null);
   }
 
   @override
@@ -73,8 +88,8 @@ class LoginViewModel extends BaseViewModel with LoginViewModelInput, LoginViewMo
   {
     inputUserName.add(userName);
     loginObject = loginObject.copyWith(userName: userName);
+    inputAreAllAllValidate.add(null);
   }
-
 }
 
 abstract class LoginViewModelInput
@@ -85,12 +100,14 @@ abstract class LoginViewModelInput
 
   Sink get inputUserName;
   Sink get inputPassword;
+  Sink get inputAreAllAllValidate;
 }
 
 abstract class LoginViewModelOutput
 {
   Stream<bool> get outIsUserNameValid;
   Stream<bool> get outIsPasswordValid;
+  Stream<bool> get outAreAllInputValid;
 }
 
 
